@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PropeSwap</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "propeswap" %>
+  <%= stylesheet_link_tag "clickable" %>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">Prope<span>Swap</span></div>
+      <% if logged_in? %>
+        <div class="chip">
+          <%= current_user.name %> · <%= current_user.role.capitalize %> · <%= current_user.area %>
+          <% if current_user.seller? %>
+            <%= link_to "Requests#{new_request_count.positive? ? " (#{new_request_count})" : ''}", incoming_requests_path, class: "ghost" %>
+          <% end %>
+          <% if current_user.admin? %><%= link_to "Admin", admin_root_path, class: "ghost" %><% end %>
+          <%= button_to "Sign out", logout_path, method: :delete, class: "ghost" %>
+        </div>
+      <% end %>
+    </header>
+
+    <% flash.each do |type, message| %>
+      <div class="flash <%= type %>" role="status"><%= message %></div>
+    <% end %>
+
+    <main><%= yield %></main>
+  </div>
+</body>
+</html>
