@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="row">
+    <div class="th" aria-hidden="true"><%= listing.emoji %></div>
+    <div class="grow">
+      <b><%= listing.title %></b>
+      <div class="meta">
+        <%= listing.user.display_name %> · <%= listing.area %> · <%= listing.distance_from(current_user.area).round(1) %> km
+      </div>
+    </div>
+    <div class="price"><%= cedis(listing.price) %></div>
+  </div>
+  <div class="acts">
+    <span class="tag"><%= listing.category %></span>
+    <%= button_to "Request this item", item_requests_path, params: { listing_id: listing.id }, class: "ghost" %>
+  </div>
+</div>
