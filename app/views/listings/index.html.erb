@@ -1,0 +1,35 @@
+<%= form_with url: root_path, method: :get do |f| %>
+  <div class="two">
+    <div>
+      <%= f.label :q, "Search" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "e.g. fridge" %>
+    </div>
+    <div>
+      <%= f.label :category, "Category" %>
+      <%= f.select :category, [["All", ""]] + Listing::CATEGORIES,
+                   { selected: params[:category] }, { onchange: "this.form.submit()" } %>
+    </div>
+  </div>
+  <div class="acts"><%= f.submit "Search", name: nil, class: "ghost" %></div>
+<% end %>
+
+<h2>Nearest to <%= current_user.area %></h2>
+<% if @listings.empty? %>
+  <div class="card">Nothing matches yet. Try another category, or check back soon.</div>
+<% else %>
+  <%= render partial: "listings/card", collection: @listings, as: :listing %>
+<% end %>
+
+<h2>My requests</h2>
+<%= form_with url: settings_path, method: :patch do |f| %>
+  <label class="tg">
+    <%= f.check_box :auto_move, { checked: current_user.auto_move?, onchange: "this.form.submit()" }, "1", "0" %>
+    Move me to the next nearest seller if there’s no reply
+  </label>
+<% end %>
+
+<% if @item_requests.empty? %>
+  <div class="card meta">No requests yet. Tap “Request this item” on a listing.</div>
+<% else %>
+  <%= render partial: "item_requests/item_request", collection: @item_requests, as: :item_request %>
+<% end %>
