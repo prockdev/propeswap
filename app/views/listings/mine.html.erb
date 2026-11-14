@@ -1,0 +1,62 @@
+<h2>Post an item</h2>
+<div class="card">
+  <% if @listing.errors.any? %>
+    <p class="warn"><%= @listing.errors.full_messages.to_sentence %></p>
+  <% end %>
+
+  <%= form_with model: @listing, url: listings_path do |f| %>
+    <%= f.label :title, "What are you selling?" %>
+    <%= f.text_field :title, placeholder: "e.g. Samsung TV 32 inch", maxlength: 100 %>
+
+    <div class="two">
+      <div>
+        <%= f.label :category, "Category" %>
+        <%= f.select :category, Listing::CATEGORIES %>
+      </div>
+      <div>
+        <%= f.label :price, "Price (GH₵)" %>
+        <%= f.number_field :price, min: 1, step: "any", inputmode: "decimal" %>
+      </div>
+    </div>
+
+    <%= f.label :area, "Pick-up area" %>
+    <%= f.select :area, Area::NAMES %>
+
+    <p class="meta">No stolen or illegal items. Cheaper prices sell faster. Listings drop after 7 days unless you renew.</p>
+    <%= f.submit "Post item", class: "btn" %>
+  <% end %>
+</div>
+
+<h2>My listings</h2>
+<% if @listings.empty? %>
+  <div class="card meta">You haven’t posted anything yet.</div>
+<% end %>
+
+<% @listings.each do |l| %>
+  <div class="card">
+    <div class="row">
+      <div class="th" aria-hidden="true"><%= l.emoji %></div>
+      <div class="grow">
+        <b><%= l.title %></b>
+        <div class="meta"><%= l.category %> · <%= l.area %></div>
+      </div>
+      <div class="price"><%= cedis(l.price) %></div>
+    </div>
+    <div class="acts">
+      <% if l.sold? %>
+        <span class="tag">Sold</span>
+      <% elsif l.expired? %>
+        <span class="tag warn">Expired</span>
+      <% else %>
+        <span class="tag"><%= pluralize(l.days_left, "day") %> left</span>
+      <% end %>
+
+      <% unless l.sold? %>
+        <%= button_to "Mark sold", sold_listing_path(l), method: :patch, class: "ghost" %>
+        <%= button_to "Renew", renew_listing_path(l), method: :patch, class: "ghost" %>
+      <% end %>
+      <%= button_to "Delete", listing_path(l), method: :delete, class: "ghost",
+                    form: { onsubmit: "return confirm('Delete this listing?')" } %>
+    </div>
+  </div>
+<% end %>
