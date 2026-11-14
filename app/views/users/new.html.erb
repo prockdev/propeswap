@@ -1,0 +1,34 @@
+<h1>Welcome to PropeSwap</h1>
+<p class="sub">Buy and sell with someone nearby.</p>
+
+<div class="tabs">
+  <%= link_to "Sign up", signup_path, class: "tab", "aria-selected": "true" %>
+  <%= link_to "Log in", login_path, class: "tab", "aria-selected": "false" %>
+</div>
+
+<div class="card">
+  <% if @user.errors.any? %>
+    <p class="warn"><%= @user.errors.full_messages.to_sentence %></p>
+  <% end %>
+
+  <%= form_with model: @user, url: signup_path do |f| %>
+    <%= f.label :name, "Your name" %>
+    <%= f.text_field :name, autocomplete: "name" %>
+
+    <%= f.label :phone, "Phone number (for WhatsApp)" %>
+    <%= f.telephone_field :phone, placeholder: "024 123 4567", autocomplete: "tel" %>
+    <p class="meta warn">⚠️ Selling? For your safety, use a business number, not your personal one.</p>
+
+    <%= f.label :password, "Password (6+ characters)" %>
+    <%= f.password_field :password, autocomplete: "new-password" %>
+
+    <span class="lbl">I want to</span>
+    <label class="tg"><%= f.radio_button :role, "buyer" %> Buy</label>
+    <label class="tg"><%= f.radio_button :role, "seller" %> Sell</label>
+
+    <%= f.label :area, "Your area" %>
+    <%= f.select :area, Area::NAMES %>
+
+    <div class="acts"><%= f.submit "Create account", class: "btn" %></div>
+  <% end %>
+</div>
