@@ -1,0 +1,34 @@
+<% l = item_request.listing %>
+<% message = "Hi #{l.user.name}, I’m #{current_user.name} on PropeSwap. Is the #{l.title} (#{cedis(l.price)}) still available? Can we meet at a #{item_request.spot.downcase}?" %>
+<div class="card">
+  <div class="row">
+    <div class="th" aria-hidden="true"><%= l.emoji %></div>
+    <div class="grow">
+      <b><%= l.title %></b>
+      <div class="meta"><%= l.user.display_name %> · <%= l.distance_from(current_user.area).round(1) %> km</div>
+    </div>
+    <div class="price"><%= cedis(l.price) %></div>
+  </div>
+
+  <% if item_request.moved? %>
+    <p class="warn">Moved here after the last seller went quiet.</p>
+  <% end %>
+
+  <%= form_with url: item_request_path(item_request), method: :patch do |f| %>
+    <%= f.label :spot, "Meet at", for: "spot_#{item_request.id}" %>
+    <%= f.select :spot, ItemRequest::SPOTS, { selected: item_request.spot },
+                 { id: "spot_#{item_request.id}", onchange: "this.form.submit()" } %>
+  <% end %>
+
+  <div class="acts">
+    <% if l.user.sample? %>
+      <span class="meta">Sample seller: no WhatsApp</span>
+    <% else %>
+      <%= link_to "Message on WhatsApp",
+                  "https://wa.me/#{l.user.phone}?text=#{ERB::Util.url_encode(message)}",
+                  class: "ghost", target: "_blank", rel: "noopener" %>
+    <% end %>
+    <%= button_to "No reply yet", no_reply_item_request_path(item_request), class: "ghost" %>
+    <%= button_to "Done", done_item_request_path(item_request), method: :patch, class: "ghost" %>
+  </div>
+</div>
