@@ -1,0 +1,7 @@
+/* Makes a whole .card tappable: put class "stretch" on the card's main link. */
+.card { position: relative; }
+a.stretch { color: inherit; font-weight: 700; text-decoration: none; }
+a.stretch::after { content: ""; position: absolute; inset: 0; border-radius: 16px; }
+a.stretch:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+/* Buttons, forms and inputs stay on top so they still work. */
+.card button, .card select, .card input, .card label, .card form { position: relative; z-index: 1; }
