@@ -1,0 +1,36 @@
+<h1>Users</h1>
+<%= render "admin/nav" %>
+
+<%= form_with url: admin_users_path, method: :get do %>
+  <%= label_tag :q, "Search by name or phone" %>
+  <%= search_field_tag :q, params[:q], placeholder: "e.g. Ama or 024 123 4567" %>
+  <div class="acts"><%= submit_tag "Search", class: "btn", name: nil %></div>
+<% end %>
+
+<h2>Showing <%= @users.size %> (newest first)</h2>
+<% if @users.empty? %>
+  <div class="card meta">No users match that search.</div>
+<% end %>
+
+<% @users.each do |u| %>
+  <div class="card">
+    <div class="row">
+      <div class="grow">
+        <b><%= u.display_name %></b>
+        <div class="meta">+<%= u.phone %> · <%= u.role.capitalize %> · <%= u.area %></div>
+        <div class="meta">Joined <%= time_ago_in_words(u.created_at) %> ago · <%= pluralize(u.listings.size, "listing") %></div>
+      </div>
+    </div>
+    <div class="acts">
+      <% if u.admin? %><span class="tag">Admin</span><% end %>
+      <% if u.suspended? %><span class="tag warn">Suspended</span><% end %>
+
+      <% if u.suspended? %>
+        <%= button_to "Restore", restore_admin_user_path(u, q: params[:q]), method: :patch, class: "ghost" %>
+      <% elsif !u.admin? %>
+        <%= button_to "Suspend", suspend_admin_user_path(u, q: params[:q]), method: :patch, class: "ghost",
+                      form: { onsubmit: "return confirm('Suspend #{j u.name}? They will be signed out and cannot log in.')" } %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
