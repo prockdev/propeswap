@@ -1,0 +1,15 @@
+<h1>Admin log</h1>
+<%= render "admin/nav" %>
+
+<h2>Latest <%= @actions.size %></h2>
+<% if @actions.empty? %>
+  <div class="card meta">Nothing logged yet.</div>
+<% end %>
+
+<% @actions.each do |a| %>
+  <div class="card">
+    <b><%= a.action.humanize %></b>
+    <div class="meta"><%= a.note %></div>
+    <div class="meta">By <%= a.admin&.display_name || "deleted admin" %> · <%= time_ago_in_words(a.created_at) %> ago</div>
+  </div>
+<% end %>
