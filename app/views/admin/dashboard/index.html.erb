@@ -1,0 +1,26 @@
+<h1>Admin</h1>
+<%= render "admin/nav" %>
+
+<h2>Users</h2>
+<div class="card">
+  <div class="row"><span>Total (real accounts)</span><b><%= @users[:total] %></b></div>
+  <div class="row"><span>Buyers</span><b><%= @users[:buyers] %></b></div>
+  <div class="row"><span>Sellers</span><b><%= @users[:sellers] %></b></div>
+  <div class="row"><span>Joined in the last 7 days</span><b><%= @users[:new_this_week] %></b></div>
+  <div class="row"><span>Suspended</span><b><%= @users[:suspended] %></b></div>
+</div>
+
+<h2>Listings</h2>
+<div class="card">
+  <div class="row"><span>Live</span><b><%= @listings[:live] %></b></div>
+  <div class="row"><span>Sold</span><b><%= @listings[:sold] %></b></div>
+  <div class="row"><span>Expired</span><b><%= @listings[:expired] %></b></div>
+</div>
+
+<h2>Requests</h2>
+<div class="card">
+  <div class="row"><span>Waiting for a seller</span><b><%= @requests[:waiting] %></b></div>
+  <div class="row"><span>Moved to another seller</span><b><%= @requests[:moved] %></b></div>
+  <div class="row"><span>Done</span><b><%= @requests[:done] %></b></div>
+</div>
+<p class="meta">Sample sellers from the seed data are left out of the user counts.</p>
