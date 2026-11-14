@@ -1,0 +1,17 @@
+<h1>Welcome back</h1>
+<p class="sub">Log in to buy or sell nearby.</p>
+
+<div class="tabs">
+  <%= link_to "Sign up", signup_path, class: "tab", "aria-selected": "false" %>
+  <%= link_to "Log in", login_path, class: "tab", "aria-selected": "true" %>
+</div>
+
+<div class="card">
+  <%= form_with url: login_path do |f| %>
+    <%= f.label :phone, "Phone number" %>
+    <%= f.telephone_field :phone, placeholder: "024 123 4567", autocomplete: "tel", value: params[:phone] %>
+    <%= f.label :password, "Password" %>
+    <%= f.password_field :password, autocomplete: "current-password" %>
+    <div class="acts"><%= f.submit "Log in", class: "btn" %></div>
+  <% end %>
+</div>
