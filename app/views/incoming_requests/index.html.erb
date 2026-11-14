@@ -1,0 +1,27 @@
+<h1>Requests</h1>
+<%= link_to "Back to my listings", sell_path, class: "ghost" %>
+
+<% if @requests.empty? %>
+  <div class="card meta">No one has requested your items yet.</div>
+<% end %>
+
+<% @requests.each do |r| %>
+  <div class="card">
+    <div class="row">
+      <div class="grow">
+        <%= link_to r.listing.title, incoming_request_path(r), class: "stretch" %>
+        <div class="meta">Requested <%= time_ago_in_words(r.created_at) %> ago</div>
+      </div>
+      <div class="price"><%= cedis(r.listing.price) %></div>
+    </div>
+    <%# Public profile only: name and area. Phone number is not shown. %>
+    <div class="meta">Buyer: <%= r.user.display_name %> · <%= r.user.area %></div>
+    <div class="meta">Meeting spot: <%= r.spot %></div>
+    <div class="acts">
+      <% if r.seen_at.nil? %>
+        <span class="tag">New</span>
+        <%= button_to "Got it", seen_incoming_request_path(r), method: :patch, class: "ghost" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
