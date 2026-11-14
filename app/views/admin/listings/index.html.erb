@@ -1,0 +1,38 @@
+<h1>Listings</h1>
+<%= render "admin/nav" %>
+
+<%= form_with url: admin_listings_path, method: :get do %>
+  <%= label_tag :q, "Search by title" %>
+  <%= search_field_tag :q, params[:q], placeholder: "e.g. fridge" %>
+  <div class="acts"><%= submit_tag "Search", class: "btn", name: nil %></div>
+<% end %>
+
+<h2>Showing <%= @listings.size %> (newest first)</h2>
+<% if @listings.empty? %>
+  <div class="card meta">No listings match that search.</div>
+<% end %>
+
+<% @listings.each do |l| %>
+  <div class="card">
+    <div class="row">
+      <div class="th" aria-hidden="true"><%= l.emoji %></div>
+      <div class="grow">
+        <%= link_to l.title, item_path(l), class: "stretch" %>
+        <div class="meta"><%= l.category %> · <%= l.area %></div>
+        <div class="meta">Seller: <%= l.user.display_name %> (+<%= l.user.phone %>)</div>
+      </div>
+      <div class="price"><%= cedis(l.price) %></div>
+    </div>
+    <div class="acts">
+      <% if l.sold? %>
+        <span class="tag">Sold</span>
+      <% elsif l.expired? %>
+        <span class="tag warn">Expired</span>
+      <% else %>
+        <span class="tag"><%= pluralize(l.days_left, "day") %> left</span>
+      <% end %>
+      <%= button_to "Remove", admin_listing_path(l, q: params[:q]), method: :delete, class: "ghost",
+                    form: { onsubmit: "return confirm('Remove this listing and its requests?')" } %>
+    </div>
+  </div>
+<% end %>
