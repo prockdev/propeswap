@@ -1,0 +1,28 @@
+<%= link_to "← Back to requests", incoming_requests_path, class: "ghost" %>
+<h1><%= @request.listing.title %></h1>
+
+<div class="card">
+  <div class="row">
+    <div class="th" aria-hidden="true"><%= @request.listing.emoji %></div>
+    <div class="grow">
+      <div class="meta"><%= @request.listing.category %> · <%= @request.listing.area %></div>
+      <div class="meta"><%= pluralize(@request.listing.days_left, "day") %> left</div>
+    </div>
+    <div class="price"><%= cedis(@request.listing.price) %></div>
+  </div>
+</div>
+
+<h2>Buyer</h2>
+<div class="card">
+  <%# Public profile only: name and area. Phone number is not shown. %>
+  <b><%= @request.user.display_name %></b>
+  <div class="meta"><%= @request.user.area %></div>
+  <div class="meta">Requested <%= time_ago_in_words(@request.created_at) %> ago</div>
+  <div class="meta">Meeting spot: <%= @request.spot %></div>
+  <div class="acts">
+    <% if @request.seen_at.nil? %>
+      <span class="tag">New</span>
+      <%= button_to "Got it", seen_incoming_request_path(@request), method: :patch, class: "ghost" %>
+    <% end %>
+  </div>
+</div>
